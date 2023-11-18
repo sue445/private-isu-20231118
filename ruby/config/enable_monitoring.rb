@@ -8,10 +8,10 @@ def current_revision
 end
 
 # for Datadog
-# require_relative "./ddtrace_init"
+require_relative "./ddtrace_init"
 
 # for NewRelic
-require_relative "./newrelic_init"
+# require_relative "./newrelic_init"
 
 Sentry.init do |config|
   config.enabled_environments = %w[production development]

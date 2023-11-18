@@ -23,8 +23,20 @@ GEM
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     dalli (3.2.6)
+    datadog-ci (0.3.0)
+      msgpack
+    datadog_thread_tracer (0.1.1)
+      ddtrace (>= 1.0.0)
+    ddtrace (1.16.2)
+      datadog-ci (~> 0.3.0)
+      debase-ruby_core_source (= 3.2.2)
+      libdatadog (~> 5.0.0.1.0)
+      libddwaf (~> 1.14.0.0.0)
+      msgpack
+    debase-ruby_core_source (3.2.2)
     drb (2.2.0)
       ruby2_keywords
+    ffi (1.16.3)
     foreman (0.87.2)
     gda (1.1.4)
     i18n (1.14.1)
@@ -32,7 +44,17 @@ GEM
     json (2.6.3)
     kgio (2.11.4)
     language_server-protocol (3.17.0.3)
+    libdatadog (5.0.0.1.0)
+    libdatadog (5.0.0.1.0-aarch64-linux)
+    libdatadog (5.0.0.1.0-x86_64-linux)
+    libddwaf (1.14.0.0.0-aarch64-linux)
+      ffi (~> 1.0)
+    libddwaf (1.14.0.0.0-arm64-darwin)
+      ffi (~> 1.0)
+    libddwaf (1.14.0.0.0-x86_64-linux)
+      ffi (~> 1.0)
     minitest (5.20.0)
+    msgpack (1.7.2)
     multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
@@ -43,8 +65,6 @@ GEM
     mysql2-nested_hash_bind (0.1.0)
       mysql2
       mysql2-cs-bind
-    newrelic_rpm (9.6.0)
-      base64
     oj (3.16.1)
     parallel (1.23.0)
     parser (3.2.2.4)
@@ -115,10 +135,11 @@ PLATFORMS
 DEPENDENCIES
   connection_pool
   dalli
+  datadog_thread_tracer
+  ddtrace (>= 1.0.0)
   foreman
   mysql2
   mysql2-nested_hash_bind
-  newrelic_rpm
   oj
   parallel
   rack
@@ -140,21 +161,32 @@ CHECKSUMS
   concurrent-ruby (1.2.2) sha256=3879119b8b75e3b62616acc256c64a134d0b0a7a9a3fcba5a233025bcde22c4f
   connection_pool (2.4.1) sha256=0f40cf997091f1f04ff66da67eabd61a9fe0d4928b9a3645228532512fab62f4
   dalli (3.2.6) sha256=879092a248bc0c8ff4b40ff233686d794422e8af4f3a5395c7bdc7432de0fd8c
+  datadog-ci (0.3.0) sha256=197e9218fad2dcf934a1541f7f3b5528e399d45ec4f651fdae46482188a6722f
+  datadog_thread_tracer (0.1.1) sha256=1470db0bd18988789a82bc09836bae6cc5d989669154d7c32813315547d37718
+  ddtrace (1.16.2) sha256=a14ac0e589a2e23b3f43a25831ef40144735215448f0d24f52a9f2207efdb99c
+  debase-ruby_core_source (3.2.2) sha256=b57519cd68b8b8e72405dcf49c776490eed81b108e079d9e3d9c591fc2f8966d
   drb (2.2.0) sha256=e9e4af1cded3306cfe37e064a0086e302d5f40df9cb4d161d059a6bb3a75d40f
+  ffi (1.16.3) sha256=6d3242ff10c87271b0675c58d68d3f10148fabc2ad6da52a18123f06078871fb
   foreman (0.87.2) sha256=2727bc6e2100bf80b76e391aefe8c30a9d172b4a8acf56f072f94ffeedeeef6b
   gda (1.1.4) sha256=c22541925988660e646df4c5174509cfffbd07cd3ec045bb0b204df0c41cbf56
   i18n (1.14.1) sha256=9d03698903547c060928e70a9bc8b6b87fda674453cda918fc7ab80235ae4a61
   json (2.6.3) sha256=86aaea16adf346a2b22743d88f8dcceeb1038843989ab93cda44b5176c845459
   kgio (2.11.4) sha256=bda7a2146115998a5b07154e708e0ac02c38dcee7e793c33e2e14f600fdfffc6
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
+  libdatadog (5.0.0.1.0) sha256=c61b02584c02447089ad8e71b7aa8e5a660fd675b727635c1a2eaec59b1840e8
+  libdatadog (5.0.0.1.0-aarch64-linux) sha256=771bbe34206f72659974edc13648f9e1f1c29d49262cc70268cd94e0eca8c5be
+  libdatadog (5.0.0.1.0-x86_64-linux) sha256=6bd7f0690641ba5177c32ae2ad77a989d54cecf37a9850ffe6770fe6a1aacad6
+  libddwaf (1.14.0.0.0-aarch64-linux) sha256=549f83ba339afb0e500bd9f4c43459e274d42f5736a18d347ba2007be026649c
+  libddwaf (1.14.0.0.0-arm64-darwin) sha256=cd3c84d58b8f77f93ebb17e6ceb1cfd257c8d3a3a1ea558a7fc14d92f697cc2b
+  libddwaf (1.14.0.0.0-x86_64-linux) sha256=030640a4158ae05f9276cc1e09bfe9d19dda5af26703235cf17cf3752f1985b1
   minitest (5.20.0) sha256=a3faf26a757ced073aaae0bd10481340f53e221a4f50d8a6033591555374752e
+  msgpack (1.7.2) sha256=59ab62fd8a4d0dfbde45009f87eb6f158ab2628a7c48886b0256f175166baaa8
   multi_json (1.15.0) sha256=1fd04138b6e4a90017e8d1b804c039031399866ff3fbabb7822aea367c78615d
   mustermann (3.0.0) sha256=6d3569aa3c3b2f048c60626f48d9b2d561cc8d2ef269296943b03da181c08b67
   mutex_m (0.2.0) sha256=b6ef0c6c842ede846f2ec0ade9e266b1a9dac0bc151682b04835e8ebd54840d5
   mysql2 (0.5.5) sha256=76d11f8590a821060b8465e82eb0b2965767acee876991c4981c365c82905bbe
   mysql2-cs-bind (0.1.1) sha256=0bf43a7b5ede925828b21f38c25103f45da6a7a1ad949b87110bd11e1171509f
   mysql2-nested_hash_bind (0.1.0) sha256=a4abc6101d7057dac11de2a52801d15455e2f940a06486e7f19ced30e44851ce
-  newrelic_rpm (9.6.0) sha256=337412cb6c1854247e753044271cf144b3f7bedfa1d7a40c119f7166a95197e9
   oj (3.16.1) sha256=f67481720cead3f2a0414e45d5a8a22725cdedfd7bb297beaf7324104dd39b54
   parallel (1.23.0) sha256=27154713ad6ef32fa3dcb7788a721d6c07bca77e72443b4c6080a14145288c49
   parser (3.2.2.4) sha256=edbe6751f85599c8152173ccadbd708f444b7214de2a1d4969441a68e06ac964
