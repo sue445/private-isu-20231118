@@ -5,6 +5,7 @@ After=syslog.target
 [Service]
 WorkingDirectory=/home/isucon/private_isu/webapp/ruby
 EnvironmentFile=/home/isucon/private_isu/webapp/env.sh
+EnvironmentFile=/home/isucon/secret_env
 Environment=RACK_ENV=production
 PIDFile=/home/isucon/private_isu/webapp/ruby/unicorn.pid
 
