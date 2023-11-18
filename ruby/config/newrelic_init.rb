@@ -26,7 +26,7 @@ module NewRelicDatabaseTracePatch
     sql = sql.gsub(/ON\s+DUPLICATE\s+KEY\s+UPDATE/i, "")
 
     tables = sql.scan(/(?:FROM|INTO|UPDATE|JOIN)\s+([^(]+?)[\s(]/i).
-      map { |matched| matched[0].strip.gsub("`", "") }.reject(&:empty?).uniq
+      map { |matched| matched[0].strip.delete("`") }.reject(&:empty?).uniq
 
     return "other" if tables.empty?
 
