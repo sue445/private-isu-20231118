@@ -374,7 +374,7 @@ module Isuconp
         return 422
       end
 
-      unless /\A[0-9]+\z/.match(params['post_id'])
+      unless /\A[0-9]+\z/ =~ (params['post_id'])
         return 'post_idは整数のみです'
       end
       post_id = params['post_id']
