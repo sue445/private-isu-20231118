@@ -4,6 +4,8 @@ require 'rack-flash'
 require 'shellwords'
 require 'rack/session/dalli'
 
+require 'mysql2-cs-bind'
+
 module Isuconp
   class App < Sinatra::Base
     disable :logging
