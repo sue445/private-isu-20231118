@@ -56,7 +56,8 @@ module Isuconp
       end
 
       def try_login(account_name, password)
-        user = db.xquery('SELECT * FROM users WHERE account_name = ? AND del_flg = 0',account_name).first
+        # TODO: Remove needless columns if necessary
+        user = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM users WHERE account_name = ? AND del_flg = 0',account_name).first
 
         if user && calculate_passhash(user[:account_name], password) == user[:passhash]
           return user
@@ -90,7 +91,8 @@ module Isuconp
 
       def get_session_user()
         if session[:user]
-          db.xquery('SELECT * FROM `users` WHERE `id` = ?',
+          # TODO: Remove needless columns if necessary
+          db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` = ?',
             session[:user][:id]
           ).first
         else
@@ -113,13 +115,15 @@ module Isuconp
             post[:id]
           ).to_a
           comments.each do |comment|
-            comment[:user] = db.xquery('SELECT * FROM `users` WHERE `id` = ?',
+            # TODO: Remove needless columns if necessary
+            comment[:user] = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` = ?',
               comment[:user_id]
             ).first
           end
           post[:comments] = comments.reverse
 
-          post[:user] = db.xquery('SELECT * FROM `users` WHERE `id` = ?',
+          # TODO: Remove needless columns if necessary
+          post[:user] = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` = ?',
             post[:user_id]
           ).first
 
@@ -231,7 +235,8 @@ module Isuconp
     end
 
     get '/@:account_name' do
-      user = db.xquery('SELECT * FROM `users` WHERE `account_name` = ? AND `del_flg` = 0',
+      # TODO: Remove needless columns if necessary
+      user = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `account_name` = ? AND `del_flg` = 0',
         params[:account_name]
       ).first
 
@@ -277,7 +282,8 @@ module Isuconp
     end
 
     get '/posts/:id' do
-      results = db.xquery('SELECT * FROM `posts` WHERE `id` = ?',
+      # TODO: Remove needless columns if necessary
+      results = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',
         params[:id]
       )
       posts = make_posts(results, all_comments: true)
@@ -343,7 +349,8 @@ module Isuconp
         return ""
       end
 
-      post = db.xquery('SELECT * FROM `posts` WHERE `id` = ?',params[:id].to_i).first
+      # TODO: Remove needless columns if necessary
+      post = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',params[:id].to_i).first
 
       if (params[:ext] == "jpg" && post[:mime] == "image/jpeg") ||
           (params[:ext] == "png" && post[:mime] == "image/png") ||
@@ -392,7 +399,8 @@ module Isuconp
         return 403
       end
 
-      users = db.query('SELECT * FROM `users` WHERE `authority` = 0 AND `del_flg` = 0 ORDER BY `created_at` DESC')
+      # TODO: Remove needless columns if necessary
+      users = db.query('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `authority` = 0 AND `del_flg` = 0 ORDER BY `created_at` DESC')
 
       erb :banned, layout: :layout, locals: { users: users, me: me }
     end
