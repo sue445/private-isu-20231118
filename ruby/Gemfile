@@ -18,11 +18,11 @@ git_source(:github) { |repo_name| "git@github.com:#{repo_name}" }
 gem "sentry-ruby"
 
 # for Datadog
-# gem "ddtrace", ">= 1.0.0"
-# gem "datadog_thread_tracer"
+gem "ddtrace", ">= 1.0.0"
+gem "datadog_thread_tracer"
 
 # for NewRelic
-gem "newrelic_rpm"
+# gem "newrelic_rpm"
 
 # FIXME: ruby 3.2.0-devでインストールできないのでコメントアウト
 # https://rubygems.org/gems/google-protobuf/versions/3.21.1-x86-linux
