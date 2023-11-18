@@ -1,0 +1,8 @@
+sidekiq_stats_worker:
+  cron: "*/10 * * * * *" # 10秒おきに実行する
+  class: SidekiqStatsWorker
+
+# trend_update_worker:
+#   # cron: "*/5 * * * *" # 5分おきに実行する
+#   cron: "*/2 * * * * *" # 2秒おきに実行する
+#   class: TrendUpdateWorker

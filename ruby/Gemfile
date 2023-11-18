@@ -10,3 +10,37 @@ gem "mysql2"
 gem "rack-flash3"
 gem 'connection_pool'
 gem "dalli"
+
+# Appended by sue445/isucon-snippets
+git_source(:github) { |repo_name| "git@github.com:#{repo_name}" }
+
+# profiling and monitoring
+gem "sentry-ruby"
+
+# for Datadog
+# gem "ddtrace", ">= 1.0.0"
+# gem "datadog_thread_tracer"
+
+# for NewRelic
+gem "newrelic_rpm"
+
+# FIXME: ruby 3.2.0-devでインストールできないのでコメントアウト
+# https://rubygems.org/gems/google-protobuf/versions/3.21.1-x86-linux
+# gem "dogstatsd-ruby"
+# gem "google-protobuf", "~> 3.0"
+
+gem "oj"
+gem "parallel"
+gem "mysql2-nested_hash_bind"
+
+group :development do
+  gem "rubocop-isucon", require: false
+  gem "rubocop_auto_corrector", require: false
+end
+
+# 必要に応じて使う
+# gem "connection_pool"
+# gem "puma_worker_killer", require: false
+# gem "redis"
+# gem "sidekiq"
+# gem "sidekiq-cron"

@@ -1,0 +1,40 @@
+upstream any_ap {
+  server 127.0.0.1:9292;
+}
+
+upstream only_ap1 {
+  server 127.0.0.1:9292;
+}
+
+server {
+    listen 8080;
+
+    root /home/isucon/webapp/frontend/public/;
+
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_send_timeout 300;
+
+    location ~ \.(js|map)$ {
+      expires 1d;
+    }
+
+    location /packs/ {
+      expires 1d;
+    }
+
+    location /favicon.ico {
+      expires 1d;
+    }
+
+    location /initialize {
+        proxy_set_header Host $http_host;
+        proxy_pass http://only_ap1;
+    }
+
+    location / {
+        proxy_set_header Host $http_host;
+        # proxy_pass http://127.0.0.1:8000;
+        proxy_pass http://any_ap;
+    }
+}

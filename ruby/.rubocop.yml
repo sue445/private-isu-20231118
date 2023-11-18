@@ -1,0 +1,22 @@
+require:
+  - rubocop-isucon
+
+inherit_gem:
+  rubocop-isucon:
+    # Disable default cops (except Performance cops)
+    - "config/enable-only-performance.yml"
+
+AllCops:
+  NewCops: enable
+  DisplayStyleGuide: true
+  TargetRubyVersion: 3.2
+
+Isucon/Mysql2:
+  Database:
+    adapter: mysql2
+    host: 127.0.0.1
+    database: # TODO: Fix this
+    username: root
+    password:
+    encoding: utf8
+    port: 3306
