@@ -15,7 +15,7 @@ Isucon/Mysql2:
   Database:
     adapter: mysql2
     host: 127.0.0.1
-    database: # TODO: Fix this
+    database: isuconp
     username: root
     password:
     encoding: utf8
