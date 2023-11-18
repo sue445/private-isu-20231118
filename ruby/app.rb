@@ -332,7 +332,10 @@ module Isuconp
 
         params['file'][:tempfile].rewind
         query = 'INSERT INTO `posts` (`user_id`, `mime`, `imgdata`, `body`) VALUES (?,?,?,?)'
-        db.xquery(query,
+
+        # FIXME: ncoding::CompatibilityError - incompatible character encodings: UTF-8 and ASCII-8BIT:
+        db.prepare(query).execute(
+        # db.xquery(query,
           me[:id],
           mime,
           params["file"][:tempfile].read,
