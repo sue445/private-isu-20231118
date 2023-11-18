@@ -10,7 +10,7 @@ PIDFile=/home/isucon/private_isu/webapp/ruby/unicorn.pid
 
 User=isucon
 Group=isucon
-ExecStart=/home/isucon/.local/ruby/bin/bundle exec unicorn -c unicorn_config.rb
+ExecStart=/home/isucon/local/ruby/versions/3.3.0-dev/bin/bundle exec unicorn -c unicorn_config.rb
 ExecStop=/bin/kill -s QUIT $MAINPID
 ExecReload=/bin/kill -s USR2 $MAINPID
 
