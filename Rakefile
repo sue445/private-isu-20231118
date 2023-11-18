@@ -22,20 +22,20 @@ HOSTS = {
 INITIALIZE_ENDPOINT = "http://#{HOSTS[:host01]}/initialize"
 
 # デプロイ先のカレントディレクトリ
-CURRENT_DIR = "/home/isucon/isutrain"
+CURRENT_DIR = "/home/isucon/private_isu/webapp"
 
 # rubyアプリのディレクトリ
-RUBY_APP_DIR = "/home/isucon/APP_NAME/webapp/ruby"
+RUBY_APP_DIR = "/home/isucon/private_isu/webapp/ruby"
 
 # アプリのservice名
 # NOTE: `sudo systemctl list-unit-files --type=service | grep isu` などで調べる
-APP_SERVICE_NAME = "isuxxxxx-ruby.service"
+APP_SERVICE_NAME = "isu-ruby.service"
 
 # デプロイを記録するissue
-GITHUB_REPO     = "sue445/isuconXX-qualify"
+GITHUB_REPO     = "sue445/private-isu-20231118"
 GITHUB_ISSUE_ID = 1
 
-RUBY_VERSION_PATH = "#{__dir__}/webapp/ruby/.ruby-version"
+RUBY_VERSION_PATH = "#{__dir__}/ruby/.ruby-version"
 
 ruby_version = File.read(RUBY_VERSION_PATH).strip
 
