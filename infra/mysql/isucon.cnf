@@ -1,0 +1,63 @@
+[mysqld_safe]
+log_error = /var/log/mysql/error.log
+
+[mysqld]
+log_error = /var/log/mysql/error.log
+
+max_connections=3000
+
+# MySQL server has gone away対策
+max_allowed_packet = 1000M
+connect_timeout = 60
+
+# デフォルトが127.0.0.1なのを変える
+bind-address  = 0.0.0.0
+# mysqlx-bind-address = 0.0.0.0
+
+innodb_file_per_table = ON
+
+# c.f. 技術評論社「達人が教えるWebパフォーマンスチューニング」P163,P292
+innodb_flush_method=O_DIRECT
+
+# コミットごとに更新データをログに書き、1秒ごとにログをフラッシュ
+innodb_flush_log_at_trx_commit = 2
+
+# バイナリログを無効化する
+disable-log-bin = 1
+
+# TODO: 下記はMySQLにhost全部のメモリを割り当てる前提なのでDBとappを分けてから有効化する
+# 物理メモリの8割
+# innodb_buffer_pool_size = 3049M
+
+# innodb_buffer_pool_sizeの1/4程度
+# innodb_log_file_size = 762M
+
+# TODO: ログを止める場合はlog_errorもコメントアウトする
+# general-log = 0
+
+# TODO: 終了直前に以降の行をコメントアウトする
+
+
+# Enable the slow query log to see queries with especially long duration
+slow_query_log         = on
+slow_query_log_file    = /var/log/mysql/slow.log
+long_query_time        = 0
+#log_slow_rate_limit    = 1000
+#log_slow_verbosity     = query_plan
+#log-queries-not-using-indexes
+
+
+# for Database Monitoring
+# c.f. https://docs.datadoghq.com/ja/database_monitoring/setup_mysql/selfhosted/
+
+performance_schema = ON
+max_digest_length  = 4096
+performance_schema_max_digest_length   = 4096
+
+# NOTE: MariaDBだとエラーになるのでコメントアウト
+# performance_schema_max_sql_text_length = 4096
+
+performance-schema-consumer-events-statements-current      = ON
+performance-schema-consumer-events-statements-history-long = ON
+performance-schema-consumer-events-statements-history      = ON
+
