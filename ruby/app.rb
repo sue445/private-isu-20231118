@@ -387,9 +387,11 @@ module Isuconp
 
     get '/posts/:id' do
       # TODO: Remove needless columns if necessary
-      results = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',
-        params[:id]
-      )
+      # results = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',
+      #   params[:id]
+      # )
+
+      results = db.xquery('SELECT `id`, `user_id`, `mime`, `body`, `created_at` FROM `posts` WHERE `id` = ?', params[:id])
       posts = make_posts(results, all_comments: true)
 
       return 404 if posts.length == 0
