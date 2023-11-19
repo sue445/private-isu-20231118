@@ -376,8 +376,8 @@ module Isuconp
         FROM `posts`
         INNER JOIN users ON users.id = `posts`.`user_id`
         WHERE users.del_flg = 0
-        AND `created_at` <= ?
-        ORDER BY `created_at` DESC LIMIT #{POSTS_PER_PAGE}
+        AND `posts`.`created_at` <= ?
+        ORDER BY `posts`.`created_at` DESC LIMIT #{POSTS_PER_PAGE}
       SQL
 
       posts = make_posts(results)
