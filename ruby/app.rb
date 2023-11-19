@@ -179,7 +179,10 @@ module Isuconp
         comments = db.xquery(comments_query, post_ids).group_by { |comment| comment[:post_id] }
 
         # 一括でユーザー情報を取得
-        user_ids = (post_ids + comments.values.flatten.map { |comment| comment[:user_id] }).uniq
+        user_ids = results.map { |post| post[:user_id] }
+        user_ids += comments.values.flatten.map { |comment| comment[:user_id] }
+        user_ids = user_ids.uniq
+
         users = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` IN (?)', user_ids).to_h { |row| [row[:id], row] }
 
         posts = results.map do |post|
