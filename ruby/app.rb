@@ -82,7 +82,7 @@ module Isuconp
         sql << 'UPDATE users SET del_flg = 0'
         sql << 'UPDATE users SET del_flg = 1 WHERE id % 50 = 0'
         sql.each do |s|
-          db.xquery(s)
+          db.xquery(s) # rubocop:disable Isucon/Mysql2/NPlusOneQuery 初期化なので無視する
         end
       end
 
@@ -479,7 +479,7 @@ module Isuconp
       query = 'UPDATE `users` SET `del_flg` = ? WHERE `id` = ?'
 
       params['uid'].each do |id|
-        db.xquery(query,1, id.to_i)
+        db.xquery(query,1, id.to_i) # rubocop:disable Isucon/Mysql2/NPlusOneQuery あまり呼ばれないのであとで直す
       end
 
       redirect '/admin/banned', 302
