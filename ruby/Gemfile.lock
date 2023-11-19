@@ -42,7 +42,6 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     json (2.6.3)
-    kgio (2.11.4)
     language_server-protocol (3.17.0.3)
     libdatadog (5.0.0.1.0)
     libdatadog (5.0.0.1.0-aarch64-linux)
@@ -65,11 +64,14 @@ GEM
     mysql2-nested_hash_bind (0.1.0)
       mysql2
       mysql2-cs-bind
+    nio4r (2.6.0)
     oj (3.16.1)
     parallel (1.23.0)
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
+    puma (6.4.0)
+      nio4r (~> 2.0)
     racc (1.7.3)
     rack (2.2.8)
     rack-flash3 (1.0.5)
@@ -77,7 +79,6 @@ GEM
     rack-protection (3.1.0)
       rack (~> 2.2, >= 2.2.4)
     rainbow (3.1.1)
-    raindrops (0.20.1)
     regexp_parser (2.8.2)
     rexml (3.2.6)
     rubocop (1.57.2)
@@ -123,9 +124,6 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
-    unicorn (6.1.0)
-      kgio (~> 2.6)
-      raindrops (~> 0.7)
 
 PLATFORMS
   aarch64-linux
@@ -142,6 +140,7 @@ DEPENDENCIES
   mysql2-nested_hash_bind
   oj
   parallel
+  puma
   rack
   rack-flash3
   rubocop-isucon
@@ -149,7 +148,6 @@ DEPENDENCIES
   sentry-ruby
   sinatra
   sinatra-contrib
-  unicorn
 
 CHECKSUMS
   activemodel (7.1.2) sha256=34d78721cd47899caea662e2a5b5c84768ebd0670845c691ce4ac769990a6ebf
@@ -171,7 +169,6 @@ CHECKSUMS
   gda (1.1.4) sha256=c22541925988660e646df4c5174509cfffbd07cd3ec045bb0b204df0c41cbf56
   i18n (1.14.1) sha256=9d03698903547c060928e70a9bc8b6b87fda674453cda918fc7ab80235ae4a61
   json (2.6.3) sha256=86aaea16adf346a2b22743d88f8dcceeb1038843989ab93cda44b5176c845459
-  kgio (2.11.4) sha256=bda7a2146115998a5b07154e708e0ac02c38dcee7e793c33e2e14f600fdfffc6
   language_server-protocol (3.17.0.3) sha256=3d5c58c02f44a20d972957a9febe386d7e7468ab3900ce6bd2b563dd910c6b3f
   libdatadog (5.0.0.1.0) sha256=c61b02584c02447089ad8e71b7aa8e5a660fd675b727635c1a2eaec59b1840e8
   libdatadog (5.0.0.1.0-aarch64-linux) sha256=771bbe34206f72659974edc13648f9e1f1c29d49262cc70268cd94e0eca8c5be
@@ -187,15 +184,16 @@ CHECKSUMS
   mysql2 (0.5.5) sha256=76d11f8590a821060b8465e82eb0b2965767acee876991c4981c365c82905bbe
   mysql2-cs-bind (0.1.1) sha256=0bf43a7b5ede925828b21f38c25103f45da6a7a1ad949b87110bd11e1171509f
   mysql2-nested_hash_bind (0.1.0) sha256=a4abc6101d7057dac11de2a52801d15455e2f940a06486e7f19ced30e44851ce
+  nio4r (2.6.0) sha256=b0f89a01783f177cbfee1b49dcb821061ab253c84fcb27dcdcd8c3af98aecbde
   oj (3.16.1) sha256=f67481720cead3f2a0414e45d5a8a22725cdedfd7bb297beaf7324104dd39b54
   parallel (1.23.0) sha256=27154713ad6ef32fa3dcb7788a721d6c07bca77e72443b4c6080a14145288c49
   parser (3.2.2.4) sha256=edbe6751f85599c8152173ccadbd708f444b7214de2a1d4969441a68e06ac964
+  puma (6.4.0) sha256=d5dda11362744df9f4694708a62e3cfddf72eba7498c16016ebbb30f106712f9
   racc (1.7.3) sha256=b785ab8a30ec43bce073c51dbbe791fd27000f68d1c996c95da98bf685316905
   rack (2.2.8) sha256=7b83a1f1304a8f5554c67bc83632d29ecd2ed1daeb88d276b7898533fde22d97
   rack-flash3 (1.0.5) sha256=1f57e26429d7987fdb3c65a2f0da95717bed99ad3e5e45d847da689b9d4a3566
   rack-protection (3.1.0) sha256=f9bc997fa87ab5fe3eb5d9d00e2a6222df3f9b8e6e9d610909ea3fc6203a5f77
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
-  raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
   regexp_parser (2.8.2) sha256=5e65506e536e4f14ce2cd98a3daecf20b88ac77b6268412928bec98c872e2ab5
   rexml (3.2.6) sha256=e0669a2d4e9f109951cb1fde723d8acd285425d81594a2ea929304af50282816
   rubocop (1.57.2) sha256=8f679dfe42d7821dc61dafb17d14b1294343157a197b9f8a23720ca17fb9161b
@@ -212,7 +210,6 @@ CHECKSUMS
   timeout (0.4.1) sha256=6f1f4edd4bca28cffa59501733a94215407c6960bd2107331f0280d4abdebb9a
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (2.5.0) sha256=7e7681dcade1add70cb9fda20dd77f300b8587c81ebbd165d14fd93144ff0ab4
-  unicorn (6.1.0) sha256=45dd987add4c2b084c1880a68373af42797a704ad7441faff9b14b4982aa0fc0
 
 BUNDLED WITH
    2.5.0.dev
