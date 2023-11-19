@@ -185,7 +185,7 @@ module Isuconp
 
         users = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` IN (?)', user_ids).to_h { |row| [row[:id], row] }
 
-        posts = results.map do |post|
+        posts = results.filter_map do |post|
           post_id = post[:id]
 
           post[:comment_count] = comment_counts[post_id].to_i
@@ -202,7 +202,7 @@ module Isuconp
           else
             nil
           end
-        end.compact
+        end
 
         if posts.length > POSTS_PER_PAGE
           posts = posts[0...POSTS_PER_PAGE]
