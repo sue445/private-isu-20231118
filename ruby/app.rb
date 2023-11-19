@@ -371,8 +371,8 @@ module Isuconp
 
         params['file'][:tempfile].rewind
 
-        db.xquery(<<~SQL, me[:id], params["body"])
-          INSERT INTO `posts` (`user_id`, `body`) VALUES (?,?)
+        db.xquery(<<~SQL, me[:id], params["body"], "", "")
+          INSERT INTO `posts` (`user_id`, `body`, `imgdata`, `mime`) VALUES (?,?,?,?)
         SQL
 
         # FIXME: ncoding::CompatibilityError - incompatible character encodings: UTF-8 and ASCII-8BIT:
