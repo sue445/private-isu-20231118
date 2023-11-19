@@ -5,7 +5,7 @@ gem "sinatra"
 gem "sinatra-contrib"
 gem "rack"
 gem "foreman"
-gem "unicorn"
+# gem "unicorn"
 gem "mysql2"
 gem "rack-flash3"
 gem 'connection_pool'
@@ -32,6 +32,7 @@ gem "datadog_thread_tracer"
 gem "oj"
 gem "parallel"
 gem "mysql2-nested_hash_bind"
+gem "puma"
 
 group :development do
   gem "rubocop-isucon", require: false
