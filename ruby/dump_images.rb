@@ -1,5 +1,7 @@
 require_relative "lib/db_helper"
 
+include DbHelper
+
 posts = db.xquery('SELECT `id`, `mime`, `imgdata` FROM `posts`')
 posts.each do |post|
   ext =
