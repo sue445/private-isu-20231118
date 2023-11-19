@@ -398,23 +398,23 @@ module Isuconp
       end
     end
 
-    get '/image/:id.:ext' do
-      if params[:id].to_i == 0
-        return ""
-      end
-
-      # TODO: Remove needless columns if necessary
-      post = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',params[:id].to_i).first
-
-      if (params[:ext] == "jpg" && post[:mime] == "image/jpeg") ||
-          (params[:ext] == "png" && post[:mime] == "image/png") ||
-          (params[:ext] == "gif" && post[:mime] == "image/gif")
-        headers['Content-Type'] = post[:mime]
-        return post[:imgdata]
-      end
-
-      return 404
-    end
+    # get '/image/:id.:ext' do
+    #   if params[:id].to_i == 0
+    #     return ""
+    #   end
+    #
+    #   # TODO: Remove needless columns if necessary
+    #   post = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',params[:id].to_i).first
+    #
+    #   if (params[:ext] == "jpg" && post[:mime] == "image/jpeg") ||
+    #       (params[:ext] == "png" && post[:mime] == "image/png") ||
+    #       (params[:ext] == "gif" && post[:mime] == "image/gif")
+    #     headers['Content-Type'] = post[:mime]
+    #     return post[:imgdata]
+    #   end
+    #
+    #   return 404
+    # end
 
     post '/comment' do
       me = get_session_user()
