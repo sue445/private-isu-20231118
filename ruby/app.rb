@@ -1,10 +1,10 @@
 require 'sinatra/base'
-require 'mysql2'
+# require 'mysql2'
 require 'rack-flash'
 require 'shellwords'
 require 'rack/session/dalli'
 
-require 'mysql2-cs-bind'
+# require 'mysql2-cs-bind'
 
 # TODO: Sinatra app内で include SentryMethods する
 require_relative "./config/sentry_methods"

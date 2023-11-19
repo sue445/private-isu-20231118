@@ -1,3 +1,6 @@
+require 'mysql2'
+require 'mysql2-cs-bind'
+
 module DbHelper
   def config
     @config ||= {
