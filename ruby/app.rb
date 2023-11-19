@@ -312,7 +312,15 @@ module Isuconp
     get '/' do
       me = get_session_user()
 
-      results = db.query('SELECT `id`, `user_id`, `body`, `created_at`, `mime` FROM `posts` ORDER BY `created_at` DESC')
+      # results = db.query('SELECT `id`, `user_id`, `body`, `created_at`, `mime` FROM `posts` ORDER BY `created_at` DESC')
+
+      results = db.query(<<~SQL)
+        SELECT `posts`.`id`, `posts`.`user_id`, `posts`.`body`, `posts`.`created_at`, `posts`.`mime`
+        FROM `posts`
+        INNER JOIN users ON users.id = `posts`.`user_id`
+        WHERE users.del_flg = 0
+        ORDER BY `created_at` DESC LIMIT #{POSTS_PER_PAGE}
+      SQL
       posts = make_posts(results)
 
       erb :index, layout: :layout, locals: { posts: posts, me: me }
