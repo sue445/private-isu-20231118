@@ -133,36 +133,69 @@ module Isuconp
         end
       end
 
+      # def make_posts(results, all_comments: false)
+      #   posts = []
+      #   results.to_a.each do |post|
+      #     post[:comment_count] = db.xquery('SELECT COUNT(*) AS `count` FROM `comments` WHERE `post_id` = ?',
+      #       post[:id]
+      #     ).first[:count]
+      #
+      #     query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` DESC'
+      #     unless all_comments
+      #       query += ' LIMIT 3'
+      #     end
+      #     comments = db.xquery(query,
+      #       post[:id]
+      #     ).to_a
+      #     comments.each do |comment|
+      #       # TODO: Remove needless columns if necessary
+      #       comment[:user] = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` = ?',
+      #         comment[:user_id]
+      #       ).first
+      #     end
+      #     post[:comments] = comments.reverse
+      #
+      #     # TODO: Remove needless columns if necessary
+      #     post[:user] = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` = ?',
+      #       post[:user_id]
+      #     ).first
+      #
+      #     posts.push(post) if post[:user][:del_flg] == 0
+      #     break if posts.length >= POSTS_PER_PAGE
+      #   end
+      #
+      #   posts
+      # end
+
       def make_posts(results, all_comments: false)
-        posts = []
-        results.to_a.each do |post|
-          post[:comment_count] = db.xquery('SELECT COUNT(*) AS `count` FROM `comments` WHERE `post_id` = ?',
-            post[:id]
-          ).first[:count]
+        post_ids = results.map { |post| post[:id] }
 
-          query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` DESC'
-          unless all_comments
-            query += ' LIMIT 3'
+        # 一括でコメント数を取得
+        comment_counts = db.xquery('SELECT post_id, COUNT(*) AS `count` FROM `comments` WHERE `post_id` IN (?) GROUP BY post_id', post_ids).to_h { |row| [row[:post_id], row[:count]] }
+
+        # 一括でコメントを取得
+        comments_query = 'SELECT * FROM `comments` WHERE `post_id` IN (?) ORDER BY `created_at` DESC'
+        comments_query += ' LIMIT 3' unless all_comments
+        comments = db.xquery(comments_query, post_ids).group_by { |comment| comment[:post_id] }
+
+        # 一括でユーザー情報を取得
+        user_ids = (post_ids + comments.values.flatten.map { |comment| comment[:user_id] }).uniq
+        users = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` IN (?)', user_ids).to_h { |row| [row[:id], row] }
+
+        posts = results.map do |post|
+          post_id = post[:id]
+
+          post[:comment_count] = comment_counts[post_id].to_i
+
+          post[:comments] = comments[post_id].to_a.reverse.map do |comment|
+            comment[:user] = users[comment[:user_id]]
+            comment
           end
-          comments = db.xquery(query,
-            post[:id]
-          ).to_a
-          comments.each do |comment|
-            # TODO: Remove needless columns if necessary
-            comment[:user] = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` = ?',
-              comment[:user_id]
-            ).first
-          end
-          post[:comments] = comments.reverse
 
-          # TODO: Remove needless columns if necessary
-          post[:user] = db.xquery('SELECT `id`, `account_name`, `passhash`, `authority`, `del_flg`, `created_at` FROM `users` WHERE `id` = ?',
-            post[:user_id]
-          ).first
+          post[:user] = users[post[:user_id]]
 
-          posts.push(post) if post[:user][:del_flg] == 0
-          break if posts.length >= POSTS_PER_PAGE
-        end
+          post if post[:user][:del_flg] == 0
+        end.compact
 
         posts
       end
