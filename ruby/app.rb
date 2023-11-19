@@ -201,6 +201,10 @@ module Isuconp
           end
         end.compact
 
+        if posts.length > POSTS_PER_PAGE
+          posts = posts[0...POSTS_PER_PAGE]
+        end
+
         posts
       end
 
