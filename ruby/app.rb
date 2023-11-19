@@ -41,6 +41,8 @@ module Isuconp
 
     POSTS_PER_PAGE = 20
 
+    PUBLIC_DIR = "#{__dir__}/../public"
+
     helpers DbHelper
 
     helpers do
@@ -179,6 +181,13 @@ module Isuconp
 
     get '/initialize' do
       db_initialize
+
+      # 画像を初期化
+      # rubocop:disable Isucon/Shell/System
+      system("rm -rf #{PUBLIC_DIR}/image/*", exception: true)
+      system("cp #{PUBLIC_DIR}/image_origin/* #{PUBLIC_DIR}/image", exception: true)
+      # rubocop:enable Isucon/Shell/System
+
       return 200
     end
 
