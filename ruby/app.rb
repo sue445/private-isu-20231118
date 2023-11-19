@@ -194,7 +194,11 @@ module Isuconp
 
           post[:user] = users[post[:user_id]]
 
-          post if post[:user][:del_flg] == 0
+          if post.dig(:user, :del_flg) == 0
+            post
+          else
+            nil
+          end
         end.compact
 
         posts
