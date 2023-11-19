@@ -15,7 +15,7 @@ posts.each do |post|
     end
 
   filename = "#{post[:id]}.#{ext}"
-  File.open(File.join(__dir__, "..", "public", "images_origin", filename), "wb") do |f|
+  File.open(File.join(__dir__, "..", "public", "image_origin", filename), "wb") do |f|
     f.write(post[:imgdata])
   end
 end
