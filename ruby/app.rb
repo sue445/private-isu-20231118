@@ -41,6 +41,8 @@ module Isuconp
 
     POSTS_PER_PAGE = 20
 
+    PUBLIC_DIR = "#{__dir__}/../public"
+
     helpers DbHelper
 
     helpers do
@@ -179,6 +181,13 @@ module Isuconp
 
     get '/initialize' do
       db_initialize
+
+      # 画像を初期化
+      # rubocop:disable Isucon/Shell/System
+      system("rm -rf #{PUBLIC_DIR}/image/*", exception: true)
+      system("cp #{PUBLIC_DIR}/image_origin/* #{PUBLIC_DIR}/image", exception: true)
+      # rubocop:enable Isucon/Shell/System
+
       return 200
     end
 
@@ -339,13 +348,17 @@ module Isuconp
 
       if params['file']
         mime = ''
+        ext = ""
         # 投稿のContent-Typeからファイルのタイプを決定する
         if params["file"][:type].include? "jpeg"
           mime = "image/jpeg"
+          ext = "jpg"
         elsif params["file"][:type].include? "png"
           mime = "image/png"
+          ext = "png"
         elsif params["file"][:type].include? "gif"
           mime = "image/gif"
+          ext = "gif"
         else
           flash[:notice] = '投稿できる画像形式はjpgとpngとgifだけです'
           redirect '/', 302
@@ -357,17 +370,26 @@ module Isuconp
         end
 
         params['file'][:tempfile].rewind
-        query = 'INSERT INTO `posts` (`user_id`, `mime`, `imgdata`, `body`) VALUES (?,?,?,?)'
+
+        db.xquery(<<~SQL, me[:id], params["body"], "", mime)
+          INSERT INTO `posts` (`user_id`, `body`, `imgdata`, `mime`) VALUES (?,?,?,?)
+        SQL
 
         # FIXME: ncoding::CompatibilityError - incompatible character encodings: UTF-8 and ASCII-8BIT:
-        db.prepare(query).execute(
-        # db.xquery(query,
-          me[:id],
-          mime,
-          params["file"][:tempfile].read,
-          params["body"],
-        )
+        # db.prepare(query).execute(
+        # # db.xquery(query,
+        #   me[:id],
+        #   mime,
+        #   params["file"][:tempfile].read,
+        #   params["body"],
+        # )
+
         pid = db.last_id
+
+        # 画像ファイルはpublic/image/に保存する
+        File.open("#{PUBLIC_DIR}/image/#{pid}.#{ext}", 'wb') do |f|
+          f.write(params['file'][:tempfile].read)
+        end
 
         redirect "/posts/#{pid}", 302
       else
@@ -376,23 +398,23 @@ module Isuconp
       end
     end
 
-    get '/image/:id.:ext' do
-      if params[:id].to_i == 0
-        return ""
-      end
-
-      # TODO: Remove needless columns if necessary
-      post = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',params[:id].to_i).first
-
-      if (params[:ext] == "jpg" && post[:mime] == "image/jpeg") ||
-          (params[:ext] == "png" && post[:mime] == "image/png") ||
-          (params[:ext] == "gif" && post[:mime] == "image/gif")
-        headers['Content-Type'] = post[:mime]
-        return post[:imgdata]
-      end
-
-      return 404
-    end
+    # get '/image/:id.:ext' do
+    #   if params[:id].to_i == 0
+    #     return ""
+    #   end
+    #
+    #   # TODO: Remove needless columns if necessary
+    #   post = db.xquery('SELECT `id`, `user_id`, `mime`, `imgdata`, `body`, `created_at` FROM `posts` WHERE `id` = ?',params[:id].to_i).first
+    #
+    #   if (params[:ext] == "jpg" && post[:mime] == "image/jpeg") ||
+    #       (params[:ext] == "png" && post[:mime] == "image/png") ||
+    #       (params[:ext] == "gif" && post[:mime] == "image/gif")
+    #     headers['Content-Type'] = post[:mime]
+    #     return post[:imgdata]
+    #   end
+    #
+    #   return 404
+    # end
 
     post '/comment' do
       me = get_session_user()
